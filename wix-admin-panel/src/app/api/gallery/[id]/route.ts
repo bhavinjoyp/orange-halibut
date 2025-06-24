@@ -4,13 +4,13 @@ import { wixService } from '@/lib/wix';
 // Fetch single gallery item
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const result = await wixService.getGalleryItems();
-    if (!result.success) {
-      return NextResponse.json({ success: false, error: result.error }, { status: 500 });
+    if (!result.success || !result.data) {
+      return NextResponse.json({ success: false, error: result.error || 'No data found' }, { status: 500 });
     }
     const item = result.data.find((g: any) => g.id === id);
     if (!item) {
@@ -25,11 +25,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const galleryData = await request.json();
-    const { id } = params;
+    const { id } = context.params;
     
     const result = await wixService.updateGalleryItem(id, galleryData);
     
