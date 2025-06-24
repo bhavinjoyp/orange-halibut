@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { wixService } from '@/lib/wix';
 
-type RouteContext = {
-  params: {
-    id: string;
-  };
-};
-
 // Fetch single gallery item
 export async function GET(
   request: NextRequest,
-  context: RouteContext
+  context
 ) {
   try {
     const { id } = context.params;
@@ -31,7 +25,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: RouteContext
+  context
 ) {
   try {
     const galleryData = await request.json();
@@ -61,7 +55,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: RouteContext
+  context
 ) {
   try {
     const { id } = context.params;
