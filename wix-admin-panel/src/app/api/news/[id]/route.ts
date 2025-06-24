@@ -3,13 +3,13 @@ import { wixService } from '@/lib/wix';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const result = await wixService.getNewsItems();
-    if (!result.success) {
-      return NextResponse.json({ success: false, error: result.error }, { status: 500 });
+    if (!result.success || !result.data) {
+      return NextResponse.json({ success: false, error: result.error || 'No data found' }, { status: 500 });
     }
     const item = result.data.find((n: any) => n.id === id);
     if (!item) {
@@ -24,11 +24,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const newsData = await request.json();
-    const { id } = params;
+    const { id } = context.params;
     const result = await wixService.updateNewsItem(id, newsData);
     if (!result.success) {
       return NextResponse.json({ success: false, error: result.error }, { status: 500 });
@@ -42,10 +42,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const result = await wixService.deleteNewsItem(id);
     if (!result.success) {
       return NextResponse.json({ success: false, error: result.error }, { status: 500 });
